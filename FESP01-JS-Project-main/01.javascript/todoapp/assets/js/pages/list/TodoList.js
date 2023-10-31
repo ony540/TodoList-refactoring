@@ -1,13 +1,12 @@
-// // 할일 목록
+// 할일 목록
 import Header from "../../layout/Header.js";
-import TodoRegist from "../regist/TodoRegist.js";
-import TodoInfo from "../info/TodoInfo.js";
 import {
   getTodo,
   updateChecked,
   getTodoList,
   getTotalNum,
 } from "./TodoListApi.js";
+import { linkTo } from "../../Router.js";
 
 const TodoList = async function () {
   const page = document.createElement("div");
@@ -19,12 +18,9 @@ const TodoList = async function () {
   let todoListData = await getTodoList();
   let totalNum = await getTotalNum();
 
-  console.log(todoListData.length);
-
   const ul = document.createElement("ul");
   ul.setAttribute("class", "todolist");
 
-  //---------
   const getListData = (limit) => {
     // 할일 목록 데이터
     todoListData?.splice(0, limit).forEach((item) => {
@@ -79,8 +75,8 @@ const TodoList = async function () {
       const handleMoveToDetail = (btn) => {
         btn.addEventListener("click", async (event) => {
           event.preventDefault();
-          const infoPage = await TodoInfo({ _id: item._id });
-          document.querySelector("#page").replaceWith(infoPage);
+
+          linkTo(todoInfoLink.getAttribute("href"));
         });
       };
       handleMoveToDetail(todoInfoLink);
@@ -105,7 +101,6 @@ const TodoList = async function () {
   };
   getListData(limit);
   content.appendChild(ul);
-  // ---------
 
   // 더보기버튼
   const viewMoreBtn = document.createElement("button");
@@ -139,8 +134,7 @@ const TodoList = async function () {
 
   // 등록 버튼 기능구현
   btnRegist.addEventListener("click", () => {
-    const registPage = TodoRegist();
-    document.querySelector("#page").replaceWith(registPage);
+    linkTo("regist");
   });
 
   page.appendChild(Header("TODO LIST"));

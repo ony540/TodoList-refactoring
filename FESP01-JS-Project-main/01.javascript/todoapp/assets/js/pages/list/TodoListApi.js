@@ -4,7 +4,6 @@ axios.defaults.baseURL = "http://localhost:33088/api/todolist";
 export const getTodoList = async () => {
   try {
     const res = await axios.get(``);
-    // const res = await axios.get(`?page=1&limit=${limit}`);
 
     return res.data.items.reverse();
   } catch (error) {
