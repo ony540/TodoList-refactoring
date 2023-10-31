@@ -74,10 +74,9 @@ const TodoInfo = async function ({ _id } = {}) {
   page.appendChild(Footer());
 
   // deleteButton와 updateButton에 이벤트 리스너를 할당
-  deleteButton.addEventListener("click", async () => {
-    if (confirm("정말 삭제하시겠습니까?")) {
-      await deleteTodo({ _id });
-    }
+  deleteButton.addEventListener("click", async (e) => {
+    e.preventDefault();
+    await deleteTodo({ _id });
   });
 
   // updateButton 이벤트 리스너 추가
