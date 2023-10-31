@@ -4,6 +4,7 @@ import { deleteTodo } from "./TodoInfoApi.js";
 import { updateTodo } from "../update/TodoUpdate.js";
 import { converter } from "../../utils/utils.js";
 import { updateChecked } from "../list/TodoListApi.js";
+import { linkTo } from "../../Router.js";
 
 const TodoInfo = async function ({ _id } = {}) {
   const page = document.createElement("div");
@@ -58,30 +59,28 @@ const TodoInfo = async function ({ _id } = {}) {
 
     const br = document.createElement("span");
     br.innerHTML = "<br/>";
-        
+
     dateBox.append(`작성 : ${converter(createdAt)}`);
     dateBox.appendChild(br);
-    dateBox.append(`수정 : ${converter(updatedAt)}`)
-        deleteButton.append("DELETE");
+    dateBox.append(`수정 : ${converter(updatedAt)}`);
+    deleteButton.append("DELETE");
     updateButton.append("EDIT");
 
     dataBox.append(patchBox, titleBox, contentBox, btnsBox);
 
-  // 체크박스 기능 구현
-  checkBox.addEventListener("click", (event) => {
-
-    if (event.target.hasAttribute("checked")) {
-      event.target.setAttribute("checked", "");
-      updateChecked(item._id, item.title, item.content, false);
-      return;
-    }
+    // 체크박스 기능 구현
+    checkBox.addEventListener("click", (event) => {
+      if (event.target.hasAttribute("checked")) {
+        event.target.setAttribute("checked", "");
+        updateChecked(item._id, item.title, item.content, false);
+        return;
+      }
       event.target.removeAttribute("checked");
       updateChecked(item._id, item.title, item.content, true);
     });
     if (checkBox.value === "true") {
       checkBox.setAttribute("checked", "");
     }
-
   } catch (err) {
     const error = document.createTextNode("일시적인 오류 발생");
     dataBox.appendChild(error);
@@ -92,16 +91,14 @@ const TodoInfo = async function ({ _id } = {}) {
   page.appendChild(Footer());
 
   // deleteButton와 updateButton에 이벤트 리스너를 할당
-  deleteButton.addEventListener("click", (e) => {
+  deleteButton.addEventListener("click", async (e) => {
     e.preventDefault();
-    console.log(e.target);
-    console.log(e.currentTarget);
 
-    console.log("컨펌전");
     const res = confirm("real?");
     if (res) {
-      console.log("컨펌됨");
-      deleteTodo({ _id });
+      console.log(res);
+      await deleteTodo({ _id });
+      await linkTo("/");
     }
     console.log("컨펌후", res);
   });
@@ -112,10 +109,6 @@ const TodoInfo = async function ({ _id } = {}) {
       // "수정일까요?" 버튼을 눌렀을 때
       const titleBox = document.querySelector("h2");
       const contentBox = document.querySelector("p");
-      // const titleLabel = document.createElement('label');
-      // const contentLabel = document.createElement('label');
-      // titleLabel.textContent = 'TITLE'
-      // contentLabel.textContent = 'CONTENT'
 
       // 현재 제목과 내용을 가져옵니다.
       const titleText = titleBox.textContent;
@@ -148,8 +141,3 @@ const TodoInfo = async function ({ _id } = {}) {
 };
 
 export default TodoInfo;
-
-/**
- * 1. 최상위 컨테이너 생성 => flx-col정렬
- * 2. doenBox, dateBox 존재 => 상위 div로 통합
- */
