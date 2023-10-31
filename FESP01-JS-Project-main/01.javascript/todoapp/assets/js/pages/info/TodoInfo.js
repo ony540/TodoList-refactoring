@@ -3,6 +3,8 @@ import Footer from "../../layout/Footer.js";
 import { deleteTodo } from "./TodoInfoApi.js";
 import { updateTodo } from "../update/TodoUpdate.js";
 import { converter } from "../../utils/utils.js";
+import { updateChecked } from "../list/TodoListApi.js";
+import { linkTo } from "../../Router.js";
 
 const TodoInfo = async function ({ _id } = {}) {
   const page = document.createElement("div");
@@ -55,12 +57,30 @@ const TodoInfo = async function ({ _id } = {}) {
     doneBox.append(checkBox, label);
     doneBox.classList.add("round");
 
-    dateBox.append(`작성: ${converter(createdAt)}`);
-    dateBox.append(`수정: ${converter(updatedAt)}`);
+    const br = document.createElement("span");
+    br.innerHTML = "<br/>";
+
+    dateBox.append(`작성 : ${converter(createdAt)}`);
+    dateBox.appendChild(br);
+    dateBox.append(`수정 : ${converter(updatedAt)}`);
     deleteButton.append("DELETE");
     updateButton.append("EDIT");
 
     dataBox.append(patchBox, titleBox, contentBox, btnsBox);
+
+    // 체크박스 기능 구현
+    checkBox.addEventListener("click", (event) => {
+      if (event.target.hasAttribute("checked")) {
+        event.target.setAttribute("checked", "");
+        updateChecked(item._id, item.title, item.content, false);
+        return;
+      }
+      event.target.removeAttribute("checked");
+      updateChecked(item._id, item.title, item.content, true);
+    });
+    if (checkBox.value === "true") {
+      checkBox.setAttribute("checked", "");
+    }
   } catch (err) {
     const error = document.createTextNode("일시적인 오류 발생");
     dataBox.appendChild(error);
@@ -71,16 +91,14 @@ const TodoInfo = async function ({ _id } = {}) {
   page.appendChild(Footer());
 
   // deleteButton와 updateButton에 이벤트 리스너를 할당
-  deleteButton.addEventListener("click", (e) => {
+  deleteButton.addEventListener("click", async (e) => {
     e.preventDefault();
-    console.log(e.target);
-    console.log(e.currentTarget);
 
-    console.log("컨펌전");
     const res = confirm("real?");
     if (res) {
-      console.log("컨펌됨");
-      deleteTodo({ _id });
+      console.log(res);
+      await deleteTodo({ _id });
+      await linkTo("/");
     }
     console.log("컨펌후", res);
   });
@@ -97,14 +115,13 @@ const TodoInfo = async function ({ _id } = {}) {
       const contentText = contentBox.textContent;
 
       // 입력 폼으로 변경
-      titleBox.innerHTML = `<input type="text" id="titleInput" value="${titleText}">`;
-      contentBox.innerHTML = `<textarea id="contentInput" maxlength="600">${contentText}</textarea>`;
-
-      // const test = document.createElement('input')
-      // const test2 = document.createElement('div')
-
-      // titleBox.replaceWith(test)
-      // contentBox.replaceWith(test2)
+      titleBox.innerHTML = `
+      <label>TITLE</label>
+      <input type="text" id="titleInput" value="${titleText}">
+      `;
+      contentBox.innerHTML = `
+      <label>CONTENT</label>
+      <textarea id="contentInput" maxlength="600">${contentText}</textarea>`;
 
       // "저장하기" 버튼으로 변경
       updateButton.innerText = "UPDATE";
@@ -124,8 +141,3 @@ const TodoInfo = async function ({ _id } = {}) {
 };
 
 export default TodoInfo;
-
-/**
- * 1. 최상위 컨테이너 생성 => flx-col정렬
- * 2. doenBox, dateBox 존재 => 상위 div로 통합
- */
