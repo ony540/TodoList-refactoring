@@ -166,6 +166,10 @@ p {
   width: 500px;
   max-width: calc(100% - 110px);
 }
+.todo-detail-container label {
+  font-size: 16px;
+  font-weight: normal;
+}
 /* TITLE */
 .todo-detail-container h2 {
   font-size: 32px;
@@ -173,6 +177,7 @@ p {
   padding-bottom: 24px;
   font-weight: bold;
 }
+
 /* CONTETNT */
 .todo-detail-container p {
   font-size: 20px;
@@ -200,17 +205,34 @@ p {
 }
 
 .todo-detail-container .btns-box .update-button{
-  background-color: #0f64a3;
-  box-sizing: border-box;
+  border: 1px solid #2d77af;
+  background-color: #2d77af;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
 }
 .todo-detail-container .btns-box .update-button:hover {
-  background-color: #fff;
-  color: #0f64a3;
-  border: 1px solid #0f64a3;
+  border: 1px solid #2d77af;
+  background-color: white;
+  color: #2d77af;
   box-sizing: border-box;
 }
 .todo-detail-container .btns-box .delete-button {
+  border: 1px solid #d93d3d;
   background-color: #d93d3d;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+}
+.todo-detail-container .btns-box .delete-button:hover {
+  border: 1px solid #d93d3d;
+  background-color: white;
+  color: #d93d3d;
+  box-sizing: border-box;
 }
 
 .todo-detail-container input {
@@ -229,7 +251,7 @@ p {
 
 .todo-detail-container textarea {
   width: 100%;
-  height: 470px;
+  height: 400px;
   resize: none;
   padding: 10px;
   border-radius: 10px;
@@ -242,6 +264,7 @@ p {
 
 .todo-detail-container .patchBox {
   display: flex;
+  justify-content: space-between;
   margin: 10px 0;
 }
 .todo-detail-container .patchBox .round {

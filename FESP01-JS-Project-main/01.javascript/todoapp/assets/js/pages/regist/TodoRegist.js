@@ -115,7 +115,7 @@ const TodoRegist = function () {
   const contentLabel = document.createElement("label");
   contentEl.setAttribute("id", "regist-content");
   contentLabel.setAttribute("for", "regist-content");
-  contentLabel.textContent = "CONENT";
+  contentLabel.textContent = "CONTENT";
   contentEl.setAttribute("placeholder", "내용을 작성해주세요.");
 
   // 등록 버튼

@@ -3,6 +3,7 @@ import Footer from "../../layout/Footer.js";
 import { deleteTodo } from "./TodoInfoApi.js";
 import { updateTodo } from "../update/TodoUpdate.js";
 import { converter } from "../../utils/utils.js";
+import { updateChecked } from "../list/TodoListApi.js";
 
 const TodoInfo = async function ({ _id } = {}) {
   const page = document.createElement("div");
@@ -55,12 +56,32 @@ const TodoInfo = async function ({ _id } = {}) {
     doneBox.append(checkBox, label);
     doneBox.classList.add("round");
 
-    dateBox.append(`작성: ${converter(createdAt)}`);
-    dateBox.append(`수정: ${converter(updatedAt)}`);
-    deleteButton.append("DELETE");
+    const br = document.createElement("span");
+    br.innerHTML = "<br/>";
+        
+    dateBox.append(`작성 : ${converter(createdAt)}`);
+    dateBox.appendChild(br);
+    dateBox.append(`수정 : ${converter(updatedAt)}`)
+        deleteButton.append("DELETE");
     updateButton.append("EDIT");
 
     dataBox.append(patchBox, titleBox, contentBox, btnsBox);
+
+  // 체크박스 기능 구현
+  checkBox.addEventListener("click", (event) => {
+
+    if (event.target.hasAttribute("checked")) {
+      event.target.setAttribute("checked", "");
+      updateChecked(item._id, item.title, item.content, false);
+      return;
+    }
+      event.target.removeAttribute("checked");
+      updateChecked(item._id, item.title, item.content, true);
+    });
+    if (checkBox.value === "true") {
+      checkBox.setAttribute("checked", "");
+    }
+
   } catch (err) {
     const error = document.createTextNode("일시적인 오류 발생");
     dataBox.appendChild(error);
@@ -91,20 +112,23 @@ const TodoInfo = async function ({ _id } = {}) {
       // "수정일까요?" 버튼을 눌렀을 때
       const titleBox = document.querySelector("h2");
       const contentBox = document.querySelector("p");
+      // const titleLabel = document.createElement('label');
+      // const contentLabel = document.createElement('label');
+      // titleLabel.textContent = 'TITLE'
+      // contentLabel.textContent = 'CONTENT'
 
       // 현재 제목과 내용을 가져옵니다.
       const titleText = titleBox.textContent;
       const contentText = contentBox.textContent;
 
       // 입력 폼으로 변경
-      titleBox.innerHTML = `<input type="text" id="titleInput" value="${titleText}">`;
-      contentBox.innerHTML = `<textarea id="contentInput" maxlength="600">${contentText}</textarea>`;
-
-      // const test = document.createElement('input')
-      // const test2 = document.createElement('div')
-
-      // titleBox.replaceWith(test)
-      // contentBox.replaceWith(test2)
+      titleBox.innerHTML = `
+      <label>TITLE</label>
+      <input type="text" id="titleInput" value="${titleText}">
+      `;
+      contentBox.innerHTML = `
+      <label>CONTENT</label>
+      <textarea id="contentInput" maxlength="600">${contentText}</textarea>`;
 
       // "저장하기" 버튼으로 변경
       updateButton.innerText = "UPDATE";
