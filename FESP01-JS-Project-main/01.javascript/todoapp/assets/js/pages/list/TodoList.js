@@ -1,35 +1,51 @@
-// 할일 목록
+// // 할일 목록
 import Header from "../../layout/Header.js";
-// import Footer from "../../layout/Footer.js";
 import TodoRegist from "../regist/TodoRegist.js";
 import TodoInfo from "../info/TodoInfo.js";
-import { getTodo, updateChecked } from "./TodoListApi.js";
-
-// const $ = document.querySelector.bind(document);
+import {
+  getTodo,
+  updateChecked,
+  getTodoList,
+  getTotalNum,
+} from "./TodoListApi.js";
 
 const TodoList = async function () {
   const page = document.createElement("div");
   page.setAttribute("id", "page");
-
   const content = document.createElement("div");
   content.setAttribute("id", "content");
-  let response;
-  try {
-    response = await axios("http://localhost:33088/api/todolist");
 
-    const ul = document.createElement("ul");
-    ul.setAttribute("class", "todolist");
-    response.data?.items.reverse().forEach((item) => {
+  let limit = 4;
+  let todoListData = await getTodoList();
+  let totalNum = await getTotalNum();
+
+  const ul = document.createElement("ul");
+  ul.setAttribute("class", "todolist");
+
+  //---------
+  const getListData = (limit) => {
+    // 할일 목록 데이터
+    todoListData?.splice(0, limit).forEach((item) => {
+      /////// DOM 생성 ///////
       const li = document.createElement("li");
-
       const todoInfoLink = document.createElement("a");
-      const todoContent = document.createElement("div");
+      const todoContent = document.createElement("p");
       const styleContainer = document.createElement("div");
-      const btnContainer = document.createElement("div");
+      const viewBtn = document.createElement("button");
+
+      // 할일 제목
+      todoInfoLink.setAttribute("href", `info?_id=${item._id}`);
+      const title = document.createTextNode(item.title);
+      todoInfoLink.appendChild(title);
+      // 상세보기 버튼
+      viewBtn.textContent = "VIEW";
+      viewBtn.classList.add("view-btn");
+
+      // 체크박스
+      const checkBoxContainer = document.createElement("div");
       const label = document.createElement("label");
       label.setAttribute("for", `checkbox-${item._id}`);
-
-      btnContainer.classList.add("round");
+      checkBoxContainer.classList.add("round");
       styleContainer.classList.add("title-content-container");
 
       const checkBox = document.createElement("input");
@@ -37,9 +53,10 @@ const TodoList = async function () {
       checkBox.setAttribute("type", "checkbox");
       checkBox.setAttribute("id", `checkbox-${item._id}`);
 
-      btnContainer.appendChild(checkBox);
-      btnContainer.appendChild(label);
+      checkBoxContainer.appendChild(checkBox);
+      checkBoxContainer.appendChild(label);
 
+      // 체크박스 기능 구현
       checkBox.addEventListener("click", (event) => {
         event.stopPropagation();
 
@@ -52,34 +69,23 @@ const TodoList = async function () {
         updateChecked(item._id, item.title, item.content, true);
       });
 
-      /**
-       * ###CHECKBOX STATE
-       * checkBox.setAttribute("checked", "")
-       * checkBox.removeAttribute("checked", "")
-       */
       if (checkBox.value === "true") {
         checkBox.setAttribute("checked", "");
       }
 
-      li.append(styleContainer);
+      // 페이지 이동 버튼 기능 구현
+      const handleMoveToDetail = (btn) => {
+        btn.addEventListener("click", async (event) => {
+          event.preventDefault();
+          const infoPage = await TodoInfo({ _id: item._id });
+          document.querySelector("#page").replaceWith(infoPage);
+        });
+      };
+      handleMoveToDetail(todoInfoLink);
+      handleMoveToDetail(viewBtn);
 
-      /**
-       * 1. 최초 호출시 item.done값을 통해 .
-       */
-
-      todoInfoLink.setAttribute("href", `info?_id=${item._id}`);
-
-      const title = document.createTextNode(item.title);
-      todoInfoLink.appendChild(title);
-
-      todoInfoLink.addEventListener("click", async function (event) {
-        // 브라우저의 기본 동작 취소(<a> 태그 동작 안하도록)
-        event.preventDefault();
-        const infoPage = await TodoInfo({ _id: item._id });
-        document.querySelector("#page").replaceWith(infoPage);
-      });
-
-      const getData = () => {
+      // 본문 데이터 뿌리기 기능구현
+      const getContentData = () => {
         return getTodo(item._id).then((i) => {
           const content = document.createTextNode(i);
           todoContent.appendChild(content);
@@ -89,35 +95,47 @@ const TodoList = async function () {
           styleContainer.appendChild(todoContent);
         });
       };
-      getData();
+      getContentData();
 
-      li.appendChild(todoInfoLink);
-      li.appendChild(btnContainer);
+      li.append(checkBoxContainer, styleContainer, viewBtn);
       ul.appendChild(li);
     });
-    content.appendChild(ul);
+  };
+  getListData(limit);
+  content.appendChild(ul);
+  // ---------
 
-    const btnRegist = document.createElement("button");
-    const btnTitle = document.createTextNode("등록");
-    btnRegist.appendChild(btnTitle);
+  // 더보기버튼
+  const viewMoreBtn = document.createElement("button");
+  viewMoreBtn.textContent = "View More...";
+  viewMoreBtn.classList.add("viewMore-btn");
 
-    content.appendChild(btnRegist);
+  // 등록 버튼
+  const btnRegist = document.createElement("button");
+  const btnTitle = document.createTextNode("Add Todo");
+  btnRegist.classList.add("regist-btn");
 
-    // EventListener
-    btnRegist.addEventListener("click", () => {
-      const registPage = TodoRegist();
-      document.querySelector("#page").replaceWith(registPage);
-    });
-  } catch (err) {
-    const error = document.createTextNode("일시적인 오류 발생");
-    content.appendChild(error);
-  }
+  btnRegist.appendChild(btnTitle);
+  content.append(viewMoreBtn, btnRegist);
 
-  // page.appendChild(Header("TODO App 목록 조회"));
+  // 더보기 버튼 기능구현
+  viewMoreBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    limit += 4;
+    getListData(limit);
+    if (limit > totalNum) {
+      viewMoreBtn.setAttribute("disabled", "");
+    }
+  });
+
+  // 등록 버튼 기능구현
+  btnRegist.addEventListener("click", () => {
+    const registPage = TodoRegist();
+    document.querySelector("#page").replaceWith(registPage);
+  });
+
   page.appendChild(Header("TODO LIST"));
-
   page.appendChild(content);
-  // page.appendChild(Footer()); // 필요하면 쓰세요ㅎ.
 
   return page;
 };
