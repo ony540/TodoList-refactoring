@@ -19,6 +19,8 @@ const TodoList = async function () {
   let todoListData = await getTodoList();
   let totalNum = await getTotalNum();
 
+  console.log(todoListData.length);
+
   const ul = document.createElement("ul");
   ul.setAttribute("class", "todolist");
 
@@ -109,6 +111,9 @@ const TodoList = async function () {
   const viewMoreBtn = document.createElement("button");
   viewMoreBtn.textContent = "View More...";
   viewMoreBtn.classList.add("viewMore-btn");
+  if (limit >= totalNum) {
+    viewMoreBtn.setAttribute("disabled", "");
+  }
 
   // 등록 버튼
   const btnRegist = document.createElement("button");
@@ -116,14 +121,18 @@ const TodoList = async function () {
   btnRegist.classList.add("regist-btn");
 
   btnRegist.appendChild(btnTitle);
-  content.append(viewMoreBtn, btnRegist);
+
+  if (totalNum > 0) {
+    content.append(viewMoreBtn);
+  }
+  content.append(btnRegist);
 
   // 더보기 버튼 기능구현
   viewMoreBtn.addEventListener("click", async (e) => {
     e.preventDefault();
     limit += 4;
     getListData(limit);
-    if (limit > totalNum) {
+    if (limit >= totalNum) {
       viewMoreBtn.setAttribute("disabled", "");
     }
   });
