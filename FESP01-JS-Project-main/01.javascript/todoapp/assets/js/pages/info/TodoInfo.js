@@ -32,31 +32,28 @@ const TodoInfo = async function ({ _id } = {}) {
     const dateBox = document.createElement("div");
 
     label.setAttribute("for", `checkbox-${_id}`);
-    
+
     deleteButton = document.createElement("button");
     deleteButton.setAttribute("type", "button");
     updateButton = document.createElement("button");
-    patchBox.className = 'patchBox'
+    patchBox.className = "patchBox";
     updateButton.className = "update-button"; // 클래스 추가
     deleteButton.className = "delete-button";
-    btnsBox.className = 'btns-box'
+    btnsBox.className = "btns-box";
 
     const checkBox = document.createElement("input");
     checkBox.value = done ? done : false;
     checkBox.setAttribute("type", "checkbox");
     checkBox.setAttribute("id", `checkbox-${_id}`);
 
-    
     btnsBox.append(updateButton, deleteButton);
-    patchBox.append(doneBox, dateBox)
+    patchBox.append(doneBox, dateBox);
     titleBox.append(title);
     contentBox.append(content);
 
     // doneBox.append(`완료여부: ${done}`);
     doneBox.append(checkBox, label);
     doneBox.classList.add("round");
-
-
 
     dateBox.append(`작성: ${converter(createdAt)}`);
     dateBox.append(`수정: ${converter(updatedAt)}`);
@@ -95,22 +92,12 @@ const TodoInfo = async function ({ _id } = {}) {
       titleBox.innerHTML = `<input type="text" id="titleInput" value="${titleText}">`;
       contentBox.innerHTML = `<textarea id="contentInput" maxlength="600">${contentText}</textarea>`;
 
-      
-      
       // const test = document.createElement('input')
       // const test2 = document.createElement('div')
-      
+
       // titleBox.replaceWith(test)
       // contentBox.replaceWith(test2)
 
-
-      
-
-
-
-      
-
-      
       // "저장하기" 버튼으로 변경
       updateButton.innerText = "UPDATE";
     } else if (updateButton.innerText === "UPDATE") {
@@ -130,8 +117,7 @@ const TodoInfo = async function ({ _id } = {}) {
 
 export default TodoInfo;
 
-
 /**
- * 1. 최상위 컨테이너 생성 => flx-col정렬 
+ * 1. 최상위 컨테이너 생성 => flx-col정렬
  * 2. doenBox, dateBox 존재 => 상위 div로 통합
  */
