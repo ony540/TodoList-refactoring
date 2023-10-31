@@ -125,9 +125,7 @@ const TodoRegist = function () {
 
   titleContainer.append(titleLabel, titleEl);
   contentContainer.append(contentLabel, contentEl);
-  formEl.append(titleContainer);
-  formEl.appendChild(contentContainer);
-  formEl.appendChild(createBtn);
+  formEl.append(titleContainer, contentContainer,createBtn);
 
   registPage.appendChild(Header("TODO 등록"));
   registPage.appendChild(formEl);

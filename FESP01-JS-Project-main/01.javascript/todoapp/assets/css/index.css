@@ -163,7 +163,8 @@ p {
   margin: 0 auto;
   text-align: center;
   position: relative;
-  width: 30%;
+  width: 500px;
+  max-width: calc(100% - 110px);
 }
 /* TITLE */
 .todo-detail-container h2 {
@@ -181,10 +182,7 @@ p {
   margin-bottom: 30px;
   line-height: 28px;
 }
-.todo-detail-container div {
-}
-.todo-detail-container span {
-}
+
 .todo-detail-container .btns-box {
   display: flex;
   justify-content: space-evenly;
@@ -197,16 +195,19 @@ p {
   border-radius: 10px;
   border: none;
   cursor: pointer;
-  box-shadow: 3px 3px 3px black;
-  transition-duration: 0.3s;
+
   min-width: 140px;
 }
-.todo-detail-container .btns-box button:active {
-  box-shadow: inset 3px 3px 3px black;
-  transition-duration: 0.3s;
-}
-.todo-detail-container .btns-box .update-button {
+
+.todo-detail-container .btns-box .update-button{
   background-color: #0f64a3;
+  box-sizing: border-box;
+}
+.todo-detail-container .btns-box .update-button:hover {
+  background-color: #fff;
+  color: #0f64a3;
+  border: 1px solid #0f64a3;
+  box-sizing: border-box;
 }
 .todo-detail-container .btns-box .delete-button {
   background-color: #d93d3d;
@@ -253,7 +254,7 @@ p {
   background-color: #fff;
   width: 500px;
   max-width: calc(100% - 110px);
-  height: 600px;
+  height: 740px;
   border-radius: 20px;
   padding: 30px;
   margin: 0 auto;
