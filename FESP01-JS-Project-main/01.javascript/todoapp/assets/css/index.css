@@ -1,4 +1,4 @@
-*{
+* {
   box-sizing: border-box;
 }
 ::-webkit-scrollbar {
@@ -159,11 +159,11 @@ p {
 .todo-detail-container {
   background-color: #fff;
   border-radius: 30px;
-  width: 30%;
   padding: 30px;
   margin: 0 auto;
   text-align: center;
   position: relative;
+  width: 30%;
 }
 /* TITLE */
 .todo-detail-container h2 {
@@ -184,7 +184,6 @@ p {
 .todo-detail-container div {
 }
 .todo-detail-container span {
-
 }
 .todo-detail-container .btns-box {
   display: flex;
@@ -199,22 +198,21 @@ p {
   border: none;
   cursor: pointer;
   box-shadow: 3px 3px 3px black;
-  transition-duration: .3s;
+  transition-duration: 0.3s;
   min-width: 140px;
 }
-.todo-detail-container .btns-box button:active{
+.todo-detail-container .btns-box button:active {
   box-shadow: inset 3px 3px 3px black;
-  transition-duration: .3s;
+  transition-duration: 0.3s;
 }
-.todo-detail-container .btns-box .update-button{
+.todo-detail-container .btns-box .update-button {
   background-color: #0f64a3;
 }
-.todo-detail-container .btns-box .delete-button{
+.todo-detail-container .btns-box .delete-button {
   background-color: #d93d3d;
-
 }
 
-.todo-detail-container input{
+.todo-detail-container input {
   width: 100%;
   padding: 20px 10px;
   border-radius: 10px;
@@ -224,34 +222,88 @@ p {
   font-weight: bold;
   text-align: center;
 }
-.todo-detail-container input:focus{
+.todo-detail-container input:focus {
   outline: none;
 }
 
-.todo-detail-container textarea{
+.todo-detail-container textarea {
   width: 100%;
   height: 470px;
-
   resize: none;
   padding: 10px;
   border-radius: 10px;
   /* box-sizing: border-box; */
   font-size: 20px;
 }
-.todo-detail-container textarea:focus{
+.todo-detail-container textarea:focus {
   outline: none;
 }
 
-.todo-detail-container .patchBox{
+.todo-detail-container .patchBox {
   display: flex;
   margin: 10px 0;
 }
-.todo-detail-container .patchBox .round{
+.todo-detail-container .patchBox .round {
   /* top: 20px; */
   margin: 0 10px;
 }
 
+/* 등록 기능 스타일 */
+.regist-form {
+  background-color: #fff;
+  width: 500px;
+  max-width: calc(100% - 110px);
+  height: 600px;
+  border-radius: 20px;
+  padding: 30px;
+  margin: 0 auto;
+  text-align: center;
+  box-sizing: border-box;
+}
 
+label {
+  display: block;
+  margin-bottom: 8px;
+}
 
+.regist-title-container {
+  margin-bottom: 10px;
+}
 
+.regist-title-container input {
+  font-size: 20px;
+  padding: 10px 0;
+  text-align: center;
+  width: 100%;
+  border: solid 0.5px;
+  border-radius: 10px;
+}
 
+.regist-content-container {
+  margin-bottom: 10px;
+}
+.regist-content-container textarea {
+  padding: 20px 30px;
+  font-family: inherit;
+  font-size: 18px;
+  line-height: 1.6;
+  resize: none;
+  width: 100%;
+  min-height: 40vh;
+  border: solid 0.5px;
+  border-radius: 10px;
+}
+
+.create-btn {
+  width: 244px;
+  margin-top: 30px;
+  padding: 20px 0;
+  text-align: center;
+  font-size: 20px;
+  box-sizing: border-box;
+}
+.create-btn:hover {
+  border: 1px solid #2d77af;
+  background-color: white;
+  color: #2d77af;
+}
