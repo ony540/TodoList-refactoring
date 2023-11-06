@@ -7,6 +7,15 @@ import {
   getTotalNum,
 } from "./TodoListApi";
 import { linkTo } from "../../Router";
+// import axios from "axios";
+
+
+interface TodoItem {
+  _id: string | number;
+  title: string;
+  content: string;
+  done: boolean;
+}
 
 const TodoList = async function () {
   const page = document.createElement("div");
@@ -21,9 +30,9 @@ const TodoList = async function () {
   const ul = document.createElement("ul");
   ul.setAttribute("class", "todolist");
 
-  const getListData = (limit) => {
+  const getListData = (limit: number) => {
     // 할일 목록 데이터
-    todoListData?.splice(0, limit).forEach((item) => {
+    todoListData?.splice(0, limit).forEach((item: TodoItem) => {
       /////// DOM 생성 ///////
       const li = document.createElement("li");
       const todoInfoLink = document.createElement("a");
@@ -47,7 +56,7 @@ const TodoList = async function () {
       styleContainer.classList.add("title-content-container");
 
       const checkBox = document.createElement("input");
-      checkBox.value = item.done ? item.done : false;
+      checkBox.value = item.done ? String(item.done) : "false";
       checkBox.setAttribute("type", "checkbox");
       checkBox.setAttribute("id", `checkbox-${item._id}`);
 
@@ -57,14 +66,15 @@ const TodoList = async function () {
       // 체크박스 기능 구현
       checkBox.addEventListener("click", (event) => {
         event.stopPropagation();
+        const target = event.target as HTMLElement;
 
-        if (event.target.hasAttribute("checked")) {
-          event.target.setAttribute("checked", "");
-          updateChecked(item._id, item.title, item.content, false);
+        if (target.hasAttribute("checked")) {
+          target.setAttribute("checked", "");
+          updateChecked(item._id, item.title, item.content, "false");
           return;
         }
-        event.target.removeAttribute("checked");
-        updateChecked(item._id, item.title, item.content, true);
+        target.removeAttribute("checked");
+        updateChecked(item._id, item.title, item.content, "true");
       });
 
       if (checkBox.value === "true") {
@@ -72,11 +82,11 @@ const TodoList = async function () {
       }
 
       // 페이지 이동 버튼 기능 구현
-      const handleMoveToDetail = (btn) => {
-        btn.addEventListener("click", async (event) => {
+      const handleMoveToDetail = (btn: HTMLElement) => {
+        btn.addEventListener("click", async (event: MouseEvent) => {
           event.preventDefault();
 
-          linkTo(todoInfoLink.getAttribute("href"));
+          linkTo(todoInfoLink.getAttribute("href")!);
         });
       };
       handleMoveToDetail(todoInfoLink);
