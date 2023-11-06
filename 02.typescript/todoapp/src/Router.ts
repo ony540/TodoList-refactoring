@@ -1,16 +1,10 @@
-import TodoList from "./pages/list/TodoList.js";
-import TodoRegist from "./pages/regist/TodoRegist.js";
-import TodoInfo from "./pages/info/TodoInfo.js";
+import TodoList from "./pages/list/TodoList";
+import TodoRegist from "./pages/regist/TodoRegist";
+import TodoInfo from "./pages/info/TodoInfo";
+import Error404 from "./pages/errors/Error404";
 
-async function NotFound(): Promise<HTMLElement> {
-  const element = document.createElement('div');
-  element.innerText = '404 Not Found';
-  return element;
-}
-
-
-async function getPage(): Promise<HTMLElement>  {
-  let page: HTMLElement | null = null;
+async function getPage() {
+  let page;
 
   switch (location.pathname) {
     case "/":
@@ -23,37 +17,25 @@ async function getPage(): Promise<HTMLElement>  {
       page = await TodoInfo({ _id: location.search.split("=")[1] });
       break;
       default:
-        page = await NotFound();
-        break;
-  
-      
-  }
-  if (!page) {
-    throw new Error('Page not found');
+      page = Error404();
   }
 
   return page;
 }
 
-async function render(): Promise<void> {
+async function render() {
   const page = await getPage();
-  const pageContainer = document.querySelector("#page");
-  if (pageContainer) {
-    pageContainer.replaceWith(page);
-  } else {
-    throw new Error("#page element not found");
-  }
+  document.querySelector("#page")!.replaceWith(page);
 }
-
 
 window.addEventListener("popstate", render);
 
-export function linkTo(url: string):void {
+export function linkTo(url: string) {
   history.pushState({}, "todo", url);
   render();
 }
 
-const Router = async function (): Promise<HTMLElement> {
+const Router = async function () {
   return await getPage();
 };
 

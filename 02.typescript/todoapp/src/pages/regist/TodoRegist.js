@@ -1,7 +1,7 @@
 // 작업용
-import Header from "../../layout/Header.js";
-import { todoRegister } from "./TodoRegistApi.js";
-import { linkTo } from "../../Router.ts";
+import Header from "../../layout/Header";
+import { todoRegister } from "./TodoRegistApi";
+import { linkTo } from "../../Router";
 
 const $ = document.querySelector.bind(document);
 const handleSubmit = async (e) => {

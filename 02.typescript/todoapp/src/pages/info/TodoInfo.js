@@ -1,10 +1,10 @@
-import Header from "../../layout/Header.js";
-import Footer from "../../layout/Footer.js";
-import { deleteTodo } from "./TodoInfoApi.js";
-import { updateTodo } from "../update/TodoUpdate.js";
-import { converter } from "../../utils/utils.js";
-import { updateChecked } from "../list/TodoListApi.js";
-import { linkTo } from "../../Router.ts";
+import Header from "../../layout/Header";
+import Footer from "../../layout/Footer";
+import { deleteTodo } from "./TodoInfoApi";
+import { updateTodo } from "../update/TodoUpdate";
+import { converter } from "../../utils/utils";
+import { updateChecked } from "../list/TodoListApi";
+import { linkTo } from "../../Router";
 
 const TodoInfo = async function ({ _id } = {}) {
   const page = document.createElement("div");

@@ -1,12 +1,12 @@
 // 할일 목록
-import Header from "../../layout/Header.js";
+import Header from "../../layout/Header";
 import {
   getTodo,
   updateChecked,
   getTodoList,
   getTotalNum,
-} from "./TodoListApi.js";
-import { linkTo } from "../../Router.ts";
+} from "./TodoListApi";
+import { linkTo } from "../../Router";
 
 const TodoList = async function () {
   const page = document.createElement("div");
