@@ -4,10 +4,10 @@ import { todoRegister } from "./TodoRegistApi";
 import { linkTo } from "../../Router";
 
 const $ = document.querySelector.bind(document);
-const handleSubmit = async (e) => {
+const handleSubmit = async (e:Event) => {
   e.preventDefault();
-  const titleInput = $("input").value;
-  const contentInput = $("textarea").value;
+  const titleInput = (<HTMLInputElement>$("input")).value;
+  const contentInput = (<HTMLTextAreaElement>$("textarea")).value;
   await todoRegister(titleInput, contentInput);
   linkTo("/");
 };
@@ -25,7 +25,7 @@ const TodoRegist = function () {
   const titleEl = document.createElement("input");
   const titleLabel = document.createElement("label");
   titleEl.setAttribute("id", "regist-title");
-  titleEl.setAttribute("maxlength", 20);
+  titleEl.setAttribute("maxlength", "20");
   titleEl.setAttribute("placeholder", "20자 이내");
 
   titleLabel.setAttribute("for", "regist-title");

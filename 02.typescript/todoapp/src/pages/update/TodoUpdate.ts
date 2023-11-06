@@ -1,5 +1,13 @@
 // 할일 수정
-export const updateTodo = async function ({ _id, title, content } = {}) {
+import axios from "axios";
+
+interface Todo {
+  _id: string;
+  title: string;
+  content: string;
+}
+
+export const updateTodo = async function ({ _id, title, content }: Todo = {}): Promise<void> {
   try {
     // 서버로 수정된 데이터를 PATCH 요청으로 전송
     await axios.patch(`http://localhost:33088/api/todolist/${_id}`, {
