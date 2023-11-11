@@ -13,7 +13,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<TodoList/>} />
                 <Route path="/regist" element={<TodoRegist/>} />
-                <Route path="/:id" element={<TodoInfo/>} />
+                <Route path="/:_id" element={<TodoInfo/>} />
                 <Route path="/:id/update" element={<TodoUpdate/>} />
             </Routes>
         </BrowserRouter>
