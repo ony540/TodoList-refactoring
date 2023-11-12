@@ -17,9 +17,8 @@ export default function TodoRegist() {
         title: titleInput,
         content: contentInput
       })
-      return response.data;
       navigate('/');
-      // finally
+      return response.data;
     } catch(error) {
       console.log(error);
     }
