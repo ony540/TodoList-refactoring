@@ -9,18 +9,26 @@ interface TodoItem {
   _id: string,
   title: string,
   content: string,
-  done: boolean,
-  createdAt: string,
-  updatedAt: string
+  done?: boolean,
+  createdAt?: string,
+  updatedAt?: string
 }
 
 export default function TodoInfo() {
-  const [todo, setTodo] = useState<TodoItem>({});
+  const [todo, setTodo] = useState<TodoItem>({
+    _id: '',
+    title: '',
+    content: '',
+    done: false,
+    createdAt: '',
+    updatedAt: ''
+  });
   const [isEditing, setIsEditing] = useState(false);
   const [updatedTitle, setUpdatedTitle] = useState("");
   const [updatedContent, setUpdatedContent] = useState("");
   const [isChecked, setIsChecked] = useState(false)
 
+  // console.log(todo);
   // TODO 데이터 불러오기
   function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -40,6 +48,17 @@ export default function TodoInfo() {
       }
     }
   };
+
+  const updateTodo = async ({_id, title, content}:TodoItem) => {
+    try {
+      await axios.patch(`http://localhost:33088/api/todolist/${_id}`, {
+        title,
+        content,
+      });
+    } catch (err) {
+      console.error('Error fetching todo:', err);
+    }
+  }
 
   useEffect(() => {
     fetchData();
@@ -70,7 +89,7 @@ export default function TodoInfo() {
     return date.toLocaleDateString("ko-KR", dateOptions).replace('20', '') + ' ' + date.toLocaleTimeString("ko-KR", timeOptions);
   };
 
-  // 수정 이벤트 함수
+  // 수정 이벤트 함수 
   const handleEditClick = () => {
     if (!isEditing) {
       setIsEditing(true);
@@ -107,7 +126,6 @@ export default function TodoInfo() {
   };
 
   // 체크박스 기능  
-  
   const handleCheckboxChange = async () => {
     if (todo._id !== undefined) {
       try {
