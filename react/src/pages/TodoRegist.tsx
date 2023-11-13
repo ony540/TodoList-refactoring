@@ -116,7 +116,7 @@ const PageStyle = styled.div`
   }
 
   .create-btn {
-    width: 244px;
+    width: 50%;
     margin-top: 30px;
     padding: 20px 0;
     text-align: center;

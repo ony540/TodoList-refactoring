@@ -146,12 +146,12 @@ export default function TodoInfo() {
             <BtnsBox>
               <EditBtn onClick={handleEditClick}>{isEditing ? 'UPDATE' : 'EDIT'}</EditBtn>
               {isEditing ? (
-                <CancelBtn
+                <DeleteBtn
                   onClick={() => {
                     setIsEditing(false);
                   }}>
                   CANCEL
-                </CancelBtn>
+                </DeleteBtn>
               ) : (
                 <DeleteBtn onClick={handleDeleteClick}>DELETE</DeleteBtn>
               )}
@@ -211,12 +211,14 @@ const EditBtn = styled.button`
   border-radius: 10px;
   border: none;
   cursor: pointer;
-  min-width: 140px;
+  min-width: 30%;
   border: 1px solid #2d77af;
   background-color: #2d77af;
   color: #fff;
   border-radius: 8px;
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 0 auto;
   &:hover {
     border: 1px solid #2d77af;
@@ -231,39 +233,21 @@ const DeleteBtn = styled.button`
   padding: 10px 30px;
   border-radius: 10px;
   border: none;
-  min-width: 140px;
+  min-width: 30%;
   border: 1px solid #d93d3d;
   background-color: #d93d3d;
   color: #fff;
   border-radius: 8px;
   cursor: pointer;
-  display: block;
   margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   &:hover {
     border: 1px solid #d93d3d;
     background-color: white;
     color: #d93d3d;
-    box-sizing: border-box;
-  }
-`;
-
-const CancelBtn = styled.button`
-  font-size: 20px;
-  padding: 10px 30px;
-  border-radius: 10px;
-  border: none;
-  min-width: 140px;
-  border: 1px solid #2d77af;
-  background-color: #2d77af;
-  color: #fff;
-  border-radius: 8px;
-  cursor: pointer;
-  display: block;
-  margin: 0 auto;
-  &:hover {
-    border: 1px solid #2d77af;
-    background-color: white;
-    color: #2d77af;
     box-sizing: border-box;
   }
 `;
