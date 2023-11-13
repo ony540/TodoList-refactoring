@@ -44,7 +44,7 @@ export default function TodoList() {
           <StyledLink to={`info?_id=${item._id}`}>{item.title}</StyledLink>
           <ContentParagraph>{item.content}</ContentParagraph>
         </TitleContentContainer>
-        <Button className="view-btn" onClick={() => navigate(`info?_id=${item._id}`)}>
+        <Button className="view-btn" onClick={() => navigate(`todo/${item._id}`)}>
           VIEW
         </Button>
       </ListItem>

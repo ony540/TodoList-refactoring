@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useParams, useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { deleteTodo, getTodoItem, patchTodoList, updateChecked } from '@/api/TodoAPI';
 import { TodoItem, defaultTodoItem } from '@/types/TodoTypes';
@@ -14,12 +14,14 @@ export default function TodoInfo() {
 
   const navigate = useNavigate();
 
-  function useQuery() {
-    return new URLSearchParams(useLocation().search);
-  }
+  // function useQuery() {
+  //   return new URLSearchParams(useLocation().search);
+  // }
 
-  const query = useQuery();
-  const _id = query.get('_id');
+  // const query = useQuery();
+  // const _id = query.get('_id');
+
+  const { _id } = useParams();
 
   const fetchData = useCallback(async () => {
     if (_id) {
