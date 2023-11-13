@@ -2,7 +2,7 @@ export interface TodoItem {
   _id: string;
   title: string;
   content: string;
-  done?: boolean;
+  done: boolean;
   createdAt?: string;
   updatedAt?: string;
 }

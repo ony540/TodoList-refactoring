@@ -55,7 +55,7 @@ export default function TodoInfo() {
     } else {
       setIsEditing(false);
       // update완료시 수정
-      updateTodo({ _id: _id as string, title: updatedTitle, content: updatedContent });
+      updateTodo({ _id: _id as string, title: updatedTitle, content: updatedContent, done: isChecked });
     }
   };
 
