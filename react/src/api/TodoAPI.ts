@@ -1,13 +1,7 @@
 import axios from 'axios';
+import { TodoItem } from '@/types/TodoTypes';
 
 axios.defaults.baseURL = 'http://localhost:33088/api/todolist';
-
-export interface TodoItem {
-  _id: string;
-  title: string;
-  content: string;
-  done: boolean;
-}
 
 export const getTodoList = async (): Promise<TodoItem[]> => {
   try {
@@ -74,5 +68,19 @@ export const deleteTodo = async ({ _id }) => {
     return res;
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const createTodo = async (title, content) => {
+  try {
+    const res = await axios.post(`http://localhost:33088/api/todolist`, {
+      title,
+      content,
+      done: false,
+    });
+    return res.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 };
