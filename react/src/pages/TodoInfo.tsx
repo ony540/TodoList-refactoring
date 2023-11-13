@@ -65,6 +65,7 @@ export default function TodoInfo() {
     const res = confirm('정말 삭제하시겠습니까?');
     if (res) {
       await deleteTodo({ _id });
+      alert('삭제되었습니다.');
       navigate('/');
       // 삭제후 리스트 페이지로 이동
     }
@@ -91,7 +92,9 @@ export default function TodoInfo() {
       <div id="app">
         <div id="page">
           <h1>TODO DETAIL</h1>
-          <button onClick={handleToHome}>HOME</button>
+          <button onClick={handleToHome} style={{ marginBottom: '50px', padding: '20px' }}>
+            HOME
+          </button>
 
           <TodoDetailWrap>
             <PatchBox>

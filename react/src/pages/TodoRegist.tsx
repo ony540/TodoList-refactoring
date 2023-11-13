@@ -26,10 +26,17 @@ export default function TodoRegist() {
     }
   };
 
+  const handleToHome = () => {
+    navigate('/');
+  };
+
   return (
     <>
       <PageStyle id="page">
         <h1>TODO 등록</h1>
+        <button onClick={handleToHome} style={{ marginBottom: '50px', padding: '20px' }}>
+          HOME
+        </button>
 
         <form className="regist-form" onSubmit={handleSubmit}>
           <div className="regist-title-container">

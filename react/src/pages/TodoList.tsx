@@ -64,7 +64,7 @@ export default function TodoList() {
 
   return (
     <Page>
-      <Title>To Do List</Title>
+      <Title>TODO LIST</Title>
       <div id="content">
         <List className="todolist">{getListData()}</List>
         {totalNum > 0 && (
