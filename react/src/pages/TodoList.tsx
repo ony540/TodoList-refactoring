@@ -41,7 +41,7 @@ export default function TodoList() {
           <label htmlFor={`checkbox-${item._id}`}></label>
         </CheckboxContainer>
         <TitleContentContainer>
-          <StyledLink to={`info?_id=${item._id}`}>{item.title}</StyledLink>
+          <StyledLink to={`todo/${item._id}`}>{item.title}</StyledLink>
           <ContentParagraph>{item.content}</ContentParagraph>
         </TitleContentContainer>
         <Button className="view-btn" onClick={() => navigate(`todo/${item._id}`)}>
