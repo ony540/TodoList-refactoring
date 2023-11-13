@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { getTodoList, getTotalNum, updateChecked } from '@/api/TodoListAPI';
+import { getTodoList, getTotalNum, updateChecked } from '@/api/TodoAPI';
 import styled from 'styled-components';
 
 interface TodoItem {
