@@ -48,6 +48,11 @@ export default function TodoInfo() {
 
   // 수정 이벤트 함수
   const handleEditClick = () => {
+    if (todo.title === updatedTitle && todo.content === updatedContent) {
+      alert('수정된 내용이 없습니다.');
+      return;
+    }
+
     if (!isEditing) {
       setIsEditing(true);
       todo.title && setUpdatedTitle(todo.title);
