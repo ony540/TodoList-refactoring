@@ -14,13 +14,6 @@ export default function TodoInfo() {
 
   const navigate = useNavigate();
 
-  // function useQuery() {
-  //   return new URLSearchParams(useLocation().search);
-  // }
-
-  // const query = useQuery();
-  // const _id = query.get('_id');
-
   const { _id } = useParams();
 
   const fetchData = useCallback(async () => {
@@ -37,6 +30,11 @@ export default function TodoInfo() {
 
   const updateTodo = async ({ _id, title, content }: TodoItem) => {
     try {
+      if (title === '' || content === '') {
+        alert('제목과 내용을 입력해주세요');
+        return;
+      }
+
       await patchTodoList({ _id, title, content });
       navigate('/');
     } catch (err) {
@@ -52,8 +50,8 @@ export default function TodoInfo() {
   const handleEditClick = () => {
     if (!isEditing) {
       setIsEditing(true);
-      setUpdatedTitle(todo.title);
-      setUpdatedContent(todo.content);
+      todo.title && setUpdatedTitle(todo.title);
+      todo.content && setUpdatedContent(todo.content);
     } else {
       setIsEditing(false);
       // update완료시 수정
@@ -140,7 +138,16 @@ export default function TodoInfo() {
             </Content>
             <BtnsBox>
               <EditBtn onClick={handleEditClick}>{isEditing ? 'UPDATE' : 'EDIT'}</EditBtn>
-              <DeleteBtn onClick={handleDeleteClick}>DELETE</DeleteBtn>
+              {isEditing ? (
+                <CancelBtn
+                  onClick={() => {
+                    setIsEditing(false);
+                  }}>
+                  CANCEL
+                </CancelBtn>
+              ) : (
+                <DeleteBtn onClick={handleDeleteClick}>DELETE</DeleteBtn>
+              )}
             </BtnsBox>
           </TodoDetailWrap>
         </div>
@@ -229,6 +236,27 @@ const DeleteBtn = styled.button`
     border: 1px solid #d93d3d;
     background-color: white;
     color: #d93d3d;
+    box-sizing: border-box;
+  }
+`;
+
+const CancelBtn = styled.button`
+  font-size: 20px;
+  padding: 10px 30px;
+  border-radius: 10px;
+  border: none;
+  min-width: 140px;
+  border: 1px solid #2d77af;
+  background-color: #2d77af;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+  &:hover {
+    border: 1px solid #2d77af;
+    background-color: white;
+    color: #2d77af;
     box-sizing: border-box;
   }
 `;
