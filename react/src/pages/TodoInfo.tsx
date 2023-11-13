@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { updateChecked } from '@/api/TodoListAPI';
+import { deleteTodo, getTodoItem, patchTodoList, updateChecked } from '@/api/TodoAPI';
 // import TodoUpdate from './TodoUpdate';
 
 interface TodoItem {
@@ -28,8 +27,9 @@ export default function TodoInfo() {
   const [updatedContent, setUpdatedContent] = useState("");
   const [isChecked, setIsChecked] = useState(false)
 
-  // console.log(todo);
-  // TODO 데이터 불러오기
+  
+ const navigate = useNavigate();
+
   function useQuery() {
     return new URLSearchParams(useLocation().search);
   }
@@ -40,9 +40,9 @@ export default function TodoInfo() {
   const fetchData = async () => {
     if (_id) {
       try {
-        const response = await axios.get(`http://localhost:33088/api/todolist/${_id}`);
-        const { item } = response.data;
+       const item = await getTodoItem(_id);
         setTodo(item);
+        setIsChecked(item.done);
       } catch (err) {
         console.error('Error fetching todo:', err);
       }
@@ -51,10 +51,8 @@ export default function TodoInfo() {
 
   const updateTodo = async ({_id, title, content}:TodoItem) => {
     try {
-      await axios.patch(`http://localhost:33088/api/todolist/${_id}`, {
-        title,
-        content,
-      });
+      await patchTodoList({_id, title, content});
+      navigate('/');
     } catch (err) {
       console.error('Error fetching todo:', err);
     }
@@ -62,8 +60,7 @@ export default function TodoInfo() {
 
   useEffect(() => {
     fetchData();
-    setIsChecked(todo.done || false);
-  }, [_id, todo]);
+  }, [_id]);
 
   // 날짜 표기 변경
   const converter = (t) => {
@@ -102,25 +99,13 @@ export default function TodoInfo() {
     }
   };
 
-
-  // 삭제 이벤트 함수
-  const deleteTodo = async function ({ _id }: { _id?: string | number | null } = {}) {
-    try {
-      const res = await axios.delete(
-        `http://localhost:33088/api/todolist/${_id}`
-      );
-      return res;
-    } catch (err) {
-      console.error("삭제 오류 발생", err);
-    }
-  };
-
   const handleDeleteClick = async (e) => {
     e.preventDefault();
 
     const res = confirm('정말 삭제하시겠습니까?');
     if (res) {
       await deleteTodo({ _id });
+      navigate('/');
       // 삭제후 리스트 페이지로 이동
     }
   };
@@ -131,18 +116,25 @@ export default function TodoInfo() {
       try {
         await updateChecked(todo._id, todo.title, todo.content, !isChecked);
         setIsChecked((prevChecked) => !prevChecked);
+        
       } catch (error) {
         console.error("Error updating checked state:", error);
       }
     }
   };
 
+  function handleToHome() {
+    navigate('/');
+   }
 
   return (
     <div>
       <div id="app">
         <div id="page">
           <h1>TODO DETAIL</h1>
+          <button onClick={handleToHome}>HOME</button>
+          {/* <Link to='/'>HOME</Link> */}
+
           <TodoDetailWrap>
             <PatchBox>
             <CheckboxContainer>
