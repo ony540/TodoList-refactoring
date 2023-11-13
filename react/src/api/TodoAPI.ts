@@ -29,14 +29,9 @@ export const getTotalNum = async (): Promise<number> => {
   }
 };
 
-export const getTodoItem = async (_id: string): Promise<string> => {
-  try {
-    const res = await axios.get(`${_id}`);
-    return res.data.item;
-  } catch (error) {
-    console.error(error);
-    return '';
-  }
+export const getTodoItem = async (_id: string): Promise<TodoItem> => {
+  const res = await axios.get(`${_id}`);
+  return res.data.item;
 };
 
 export const updateChecked = async (
@@ -59,7 +54,7 @@ export const updateChecked = async (
   }
 };
 
-export const patchTodoList = async ({_id, title, content}) => {
+export const patchTodoList = async ({ _id, title, content }) => {
   try {
     const res = await axios.patch(`http://localhost:33088/api/todolist/${_id}`, {
       title,
@@ -68,18 +63,16 @@ export const patchTodoList = async ({_id, title, content}) => {
     alert('수정이 완료되었습니다.');
     console.log(res.data);
     return res.data;
-  } catch(error) {
+  } catch (error) {
     console.error(error);
   }
-}
+};
 
 export const deleteTodo = async ({ _id }) => {
   try {
-    const res = await axios.delete(
-      `http://localhost:33088/api/todolist/${_id}`
-    );
+    const res = await axios.delete(`http://localhost:33088/api/todolist/${_id}`);
     return res;
-  } catch(error) {
+  } catch (error) {
     console.error(error);
   }
-}
+};

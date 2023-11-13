@@ -1,34 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { deleteTodo, getTodoItem, patchTodoList, updateChecked } from '@/api/TodoAPI';
-// import TodoUpdate from './TodoUpdate';
-
-interface TodoItem {
-  _id: string,
-  title: string,
-  content: string,
-  done?: boolean,
-  createdAt?: string,
-  updatedAt?: string
-}
+import { TodoItem, defaultTodoItem } from '@/types/TodoTypes';
+import { formatDate } from '@/util/dateUtils';
 
 export default function TodoInfo() {
-  const [todo, setTodo] = useState<TodoItem>({
-    _id: '',
-    title: '',
-    content: '',
-    done: false,
-    createdAt: '',
-    updatedAt: ''
-  });
+  const [todo, setTodo] = useState<TodoItem>(defaultTodoItem);
   const [isEditing, setIsEditing] = useState(false);
-  const [updatedTitle, setUpdatedTitle] = useState("");
-  const [updatedContent, setUpdatedContent] = useState("");
-  const [isChecked, setIsChecked] = useState(false)
+  const [updatedTitle, setUpdatedTitle] = useState('');
+  const [updatedContent, setUpdatedContent] = useState('');
+  const [isChecked, setIsChecked] = useState(false);
 
-  
- const navigate = useNavigate();
+  const navigate = useNavigate();
 
   function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -37,56 +21,32 @@ export default function TodoInfo() {
   const query = useQuery();
   const _id = query.get('_id');
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     if (_id) {
       try {
-       const item = await getTodoItem(_id);
+        const item = await getTodoItem(_id); // Assuming this returns an object of type TodoItem
         setTodo(item);
         setIsChecked(item.done);
       } catch (err) {
         console.error('Error fetching todo:', err);
       }
     }
-  };
+  }, [_id]);
 
-  const updateTodo = async ({_id, title, content}:TodoItem) => {
+  const updateTodo = async ({ _id, title, content }: TodoItem) => {
     try {
-      await patchTodoList({_id, title, content});
+      await patchTodoList({ _id, title, content });
       navigate('/');
     } catch (err) {
       console.error('Error fetching todo:', err);
     }
-  }
+  };
 
   useEffect(() => {
     fetchData();
-  }, [_id]);
+  }, [fetchData]);
 
-  // 날짜 표기 변경
-  const converter = (t) => {
-    const date = new Date(t);
-
-    const dateOptions: {
-      year: 'numeric';
-      month: 'numeric';
-      day: 'numeric';
-    } = {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-    };
-
-    const timeOptions: {
-      hour: 'numeric';
-      minute: 'numeric';
-    } = {
-      hour: 'numeric',
-      minute: 'numeric'
-    };
-    return date.toLocaleDateString("ko-KR", dateOptions).replace('20', '') + ' ' + date.toLocaleTimeString("ko-KR", timeOptions);
-  };
-
-  // 수정 이벤트 함수 
+  // 수정 이벤트 함수
   const handleEditClick = () => {
     if (!isEditing) {
       setIsEditing(true);
@@ -99,7 +59,7 @@ export default function TodoInfo() {
     }
   };
 
-  const handleDeleteClick = async (e) => {
+  const handleDeleteClick = async e => {
     e.preventDefault();
 
     const res = confirm('정말 삭제하시겠습니까?');
@@ -110,22 +70,21 @@ export default function TodoInfo() {
     }
   };
 
-  // 체크박스 기능  
+  // 체크박스 기능
   const handleCheckboxChange = async () => {
     if (todo._id !== undefined) {
       try {
         await updateChecked(todo._id, todo.title, todo.content, !isChecked);
-        setIsChecked((prevChecked) => !prevChecked);
-        
+        setIsChecked(prevChecked => !prevChecked);
       } catch (error) {
-        console.error("Error updating checked state:", error);
+        console.error('Error updating checked state:', error);
       }
     }
   };
 
   function handleToHome() {
     navigate('/');
-   }
+  }
 
   return (
     <div>
@@ -133,23 +92,23 @@ export default function TodoInfo() {
         <div id="page">
           <h1>TODO DETAIL</h1>
           <button onClick={handleToHome}>HOME</button>
-          {/* <Link to='/'>HOME</Link> */}
 
           <TodoDetailWrap>
             <PatchBox>
-            <CheckboxContainer>
-              <input
-                type="checkbox"
-                id={`checkbox-${todo._id}`}
-                checked={isChecked}
-                onChange={handleCheckboxChange}/>
-              <label htmlFor={`checkbox-${todo._id}`}></label>
-            </CheckboxContainer>
+              <CheckboxContainer>
+                <input
+                  type="checkbox"
+                  id={`checkbox-${todo._id}`}
+                  checked={isChecked}
+                  onChange={handleCheckboxChange}
+                />
+                <label htmlFor={`checkbox-${todo._id}`}></label>
+              </CheckboxContainer>
               <div>
                 <span>
-                  작성:{converter(todo.createdAt)}
+                  작성:{todo.createdAt && formatDate(todo.createdAt)}
                   <br />
-                  수정:{converter(todo.updatedAt)}
+                  수정:{todo.updatedAt && formatDate(todo.updatedAt)}
                 </span>
               </div>
             </PatchBox>
@@ -159,7 +118,7 @@ export default function TodoInfo() {
                   type="text"
                   id="titleInput"
                   value={updatedTitle}
-                  onChange={(e) => setUpdatedTitle(e.target.value)}
+                  onChange={e => setUpdatedTitle(e.target.value)}
                 />
               ) : (
                 todo.title
@@ -171,7 +130,7 @@ export default function TodoInfo() {
                   id="contentInput"
                   maxLength={600}
                   value={updatedContent}
-                  onChange={(e) => setUpdatedContent(e.target.value)}
+                  onChange={e => setUpdatedContent(e.target.value)}
                 />
               ) : (
                 todo.content
@@ -186,7 +145,6 @@ export default function TodoInfo() {
       </div>
     </div>
   );
-
 }
 const TodoDetailWrap = styled.div`
   background-color: #fff;
@@ -287,7 +245,7 @@ const TitleInput = styled.input`
   }
 `;
 
-const ContentTextarea = styled.textarea<{ maxLength? : number }>`
+const ContentTextarea = styled.textarea<{ maxLength?: number }>`
   width: 100%;
   height: 400px;
   resize: none;
