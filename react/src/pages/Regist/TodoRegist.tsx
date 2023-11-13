@@ -1,30 +1,19 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import styled from 'styled-components';
-import { createTodo } from '@/api/TodoAPI';
+import { useNavigate } from 'react-router-dom';
+import { useTodoForm } from '@pages/Regist/TodoRegist.hooks';
+import { useTodoSubmit } from '@pages/Regist/TodoRegist.hooks';
 
 export default function TodoRegist() {
-  const [titleInput, setTitleInput] = useState<string>('');
-  const [contentInput, setContentInput] = useState<string>('');
+  const { titleInput, handleTitleChange, contentInput, handleContentChange } = useTodoForm();
+  const handleSubmitForm = useTodoSubmit();
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    handleSubmitForm(titleInput, contentInput);
+  };
 
   const navigate = useNavigate();
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!titleInput || !contentInput) {
-      alert('제목과 내용을 모두 입력해주세요.');
-      return;
-    }
-
-    try {
-      await createTodo(titleInput, contentInput);
-      alert('등록되었습니다.');
-      navigate('/');
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const handleToHome = () => {
     navigate('/');
@@ -47,7 +36,7 @@ export default function TodoRegist() {
               placeholder="20자 이내"
               maxLength={20}
               value={titleInput}
-              onChange={e => setTitleInput(e.target.value)}
+              onChange={handleTitleChange}
             />
           </div>
 
@@ -58,7 +47,7 @@ export default function TodoRegist() {
               className="regist-content"
               placeholder="내용을 작성해주세요."
               value={contentInput}
-              onChange={e => setContentInput(e.target.value)}
+              onChange={handleContentChange}
             />
           </div>
 

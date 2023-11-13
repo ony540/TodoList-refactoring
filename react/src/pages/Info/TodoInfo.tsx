@@ -1,102 +1,29 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router';
-import styled from 'styled-components';
-import { deleteTodo, getTodoItem, patchTodoList, updateChecked } from '@/api/TodoAPI';
-import { TodoItem, defaultTodoItem } from '@/types/TodoTypes';
+import { useTodoInfo } from '@pages/Info/TodoInfo.hooks';
+import { useCheckboxState } from '@/hooks/useCheckboxState';
 import { formatDate } from '@/util/dateUtils';
+import { useNavigateHome } from '@/hooks/useNavigateHome';
+import styled from 'styled-components';
 
 export default function TodoInfo() {
-  const [todo, setTodo] = useState<TodoItem>(defaultTodoItem);
-  const [isEditing, setIsEditing] = useState(false);
-  const [updatedTitle, setUpdatedTitle] = useState('');
-  const [updatedContent, setUpdatedContent] = useState('');
-  const [isChecked, setIsChecked] = useState(false);
-
-  const navigate = useNavigate();
-
-  const { _id } = useParams();
-
-  const fetchData = useCallback(async () => {
-    if (_id) {
-      try {
-        const item = await getTodoItem(_id); // Assuming this returns an object of type TodoItem
-        setTodo(item);
-        setIsChecked(item.done);
-      } catch (err) {
-        console.error('Error fetching todo:', err);
-      }
-    }
-  }, [_id]);
-
-  const updateTodo = async ({ _id, title, content }: TodoItem) => {
-    try {
-      if (title === '' || content === '') {
-        alert('제목과 내용을 입력해주세요');
-        return;
-      }
-
-      await patchTodoList({ _id, title, content });
-      navigate('/');
-    } catch (err) {
-      console.error('Error fetching todo:', err);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  // 수정 이벤트 함수
-  const handleEditClick = () => {
-    if (!isEditing) {
-      setIsEditing(true);
-      setUpdatedTitle(todo.title);
-      setUpdatedContent(todo.content);
-    } else {
-      if (todo.title === updatedTitle && todo.content === updatedContent) {
-        alert('수정된 내용이 없습니다.');
-        setIsEditing(true);
-        return;
-      }
-      setIsEditing(false);
-      updateTodo({ _id: _id as string, title: updatedTitle, content: updatedContent, done: isChecked });
-    }
-  };
-
-  const handleDeleteClick = async e => {
-    e.preventDefault();
-
-    const res = confirm('정말 삭제하시겠습니까?');
-    if (res) {
-      await deleteTodo({ _id });
-      alert('삭제되었습니다.');
-      navigate('/');
-      // 삭제후 리스트 페이지로 이동
-    }
-  };
-
-  // 체크박스 기능
-  const handleCheckboxChange = async () => {
-    if (todo._id !== undefined) {
-      try {
-        await updateChecked(todo._id, todo.title, todo.content, !isChecked);
-        setIsChecked(prevChecked => !prevChecked);
-      } catch (error) {
-        console.error('Error updating checked state:', error);
-      }
-    }
-  };
-
-  function handleToHome() {
-    navigate('/');
-  }
+  const {
+    todo,
+    isEditing,
+    updatedTitle,
+    updatedContent,
+    handleEditClick,
+    handleDeleteClick,
+    setUpdatedTitle,
+    setUpdatedContent,
+    setIsEditing,
+  } = useTodoInfo();
+  const { isChecked, handleCheckboxChange } = useCheckboxState(todo);
 
   return (
     <div>
       <div id="app">
         <div id="page">
           <h1>TODO DETAIL</h1>
-          <button onClick={handleToHome} style={{ marginBottom: '50px', padding: '20px' }}>
+          <button onClick={useNavigateHome()} style={{ marginBottom: '50px', padding: '20px' }}>
             HOME
           </button>
 
@@ -162,6 +89,7 @@ export default function TodoInfo() {
     </div>
   );
 }
+
 const TodoDetailWrap = styled.div`
   background-color: #fff;
   border-radius: 30px;

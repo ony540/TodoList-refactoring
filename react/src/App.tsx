@@ -1,8 +1,8 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import TodoList from '@/pages/TodoList';
-import TodoRegist from '@/pages/TodoRegist';
-import TodoInfo from '@/pages/TodoInfo';
+import TodoList from '@/pages/List/TodoList';
+import TodoRegist from '@/pages/Regist/TodoRegist';
+import TodoInfo from '@/pages/Info/TodoInfo';
 
 function App() {
   return (
