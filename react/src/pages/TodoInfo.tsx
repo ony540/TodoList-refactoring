@@ -48,18 +48,17 @@ export default function TodoInfo() {
 
   // 수정 이벤트 함수
   const handleEditClick = () => {
-    if (todo.title === updatedTitle && todo.content === updatedContent) {
-      alert('수정된 내용이 없습니다.');
-      return;
-    }
-
     if (!isEditing) {
       setIsEditing(true);
-      todo.title && setUpdatedTitle(todo.title);
-      todo.content && setUpdatedContent(todo.content);
+      setUpdatedTitle(todo.title);
+      setUpdatedContent(todo.content);
     } else {
+      if (todo.title === updatedTitle && todo.content === updatedContent) {
+        alert('수정된 내용이 없습니다.');
+        setIsEditing(true);
+        return;
+      }
       setIsEditing(false);
-      // update완료시 수정
       updateTodo({ _id: _id as string, title: updatedTitle, content: updatedContent, done: isChecked });
     }
   };
