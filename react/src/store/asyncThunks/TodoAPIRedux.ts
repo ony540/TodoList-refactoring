@@ -16,13 +16,19 @@ export const getTodoList = createAsyncThunk<TodoItem[], void, AsyncThunkConfig>(
   async (_, thunkAPI) => {
     try {
       const res = await axios.get(``);
-      return res.data.items.reverse() as TodoItem[];
+
+      const sortedItems = res.data.items.sort((a: TodoItem, b: TodoItem) => {
+        return new Date(b.updatedAt!).getTime() - new Date(a.updatedAt!).getTime();
+      });
+
+      return sortedItems;
     } catch (error) {
       console.error('Error fetching todo list:', error);
       return thunkAPI.rejectWithValue('Error fetching todo list');
     }
   },
 );
+
 export const getTodoItem = createAsyncThunk<TodoItem, { _id: string }, AsyncThunkConfig>(
   'todoData/getTodoItem',
   async ({ _id }, thunkAPI) => {

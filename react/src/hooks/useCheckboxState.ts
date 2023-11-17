@@ -1,9 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
-import { updateChecked } from '@/store/asyncThunks/TodoAPIRedux';
+import { getTodoList, updateChecked } from '@/store/asyncThunks/TodoAPIRedux';
 import { AppThunkDispatch } from '@/store/store';
 import { useDispatch } from 'react-redux';
+import { useLocation } from 'react-router';
 
 export const useCheckboxState = initialTodo => {
+  const { pathname } = useLocation();
   const { _id, title, content, done } = initialTodo;
   const dispatch: AppThunkDispatch = useDispatch();
 
@@ -14,7 +16,7 @@ export const useCheckboxState = initialTodo => {
     setIsChecked(done);
   }, [done]);
 
-  const handleCheckboxChange = () => {
+  const handleCheckboxChange = async () => {
     if (!throttleTimer.current) {
       // 타이머가 없으면 즉시 실행하고 타이머 설정
       throttleTimer.current = setTimeout(() => {
@@ -24,7 +26,10 @@ export const useCheckboxState = initialTodo => {
       if (_id !== undefined) {
         try {
           const updatedStatus = !isChecked;
-          dispatch(updateChecked({ _id, title, content, done: updatedStatus })).then(() => setIsChecked(updatedStatus));
+          await dispatch(updateChecked({ _id, title, content, done: updatedStatus })).then(() => {
+            setIsChecked(updatedStatus);
+            if (pathname === '/') dispatch(getTodoList());
+          });
         } catch (error) {
           console.error('Error updating checked state:', error);
         }
