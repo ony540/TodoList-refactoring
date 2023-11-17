@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createTodo } from '@/api/TodoAPI';
+import { createTodo } from '@/store/asyncThunks/TodoAPIRedux';
 
 export const useTodoForm = () => {
   const [titleInput, setTitleInput] = useState<string>('');

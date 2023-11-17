@@ -1,14 +1,17 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { deleteTodo, getTodoItem, patchTodoList, updateChecked } from '@/api/TodoAPI';
-import { TodoItem, defaultTodoItem } from '@/types/TodoTypes';
+import { getTodoList, getTodoItem, patchTodoItem, deleteTodo, updateChecked } from '@/store/asyncThunks/TodoAPIRedux';
+import { TodoItem } from '@/types/TodoTypes';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppThunkDispatch, RootState } from '@/store/store';
 
 export const useTodoInfo = () => {
-  const [todo, setTodo] = useState<TodoItem>(defaultTodoItem);
+  const dispatch: AppThunkDispatch = useDispatch();
+  const todo = useSelector((state: RootState) => state.todoReducer.selectedTodo);
   const [isEditing, setIsEditing] = useState(false);
   const [updatedTitle, setUpdatedTitle] = useState('');
   const [updatedContent, setUpdatedContent] = useState('');
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(todo.done);
 
   const navigate = useNavigate();
   const { _id } = useParams();
@@ -16,14 +19,12 @@ export const useTodoInfo = () => {
   const fetchData = useCallback(async () => {
     if (_id) {
       try {
-        const item = await getTodoItem(_id);
-        setTodo(item);
-        setIsChecked(item.done);
+        dispatch(getTodoItem({ _id }));
       } catch (err) {
         console.error('Error fetching todo:', err);
       }
     }
-  }, [_id]);
+  }, [_id, dispatch]);
 
   const updateTodo = async (updatedTodo: TodoItem) => {
     try {
@@ -31,9 +32,7 @@ export const useTodoInfo = () => {
         alert('제목과 내용을 입력해주세요');
         return;
       }
-
-      await patchTodoList(updatedTodo);
-      navigate('/');
+      dispatch(patchTodoItem(updatedTodo));
     } catch (err) {
       console.error('Error updating todo:', err);
     }
@@ -54,13 +53,13 @@ export const useTodoInfo = () => {
     }
   };
 
-  const handleDeleteClick = async e => {
+  const handleDeleteClick = async (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
 
     const res = confirm('정말 삭제하시겠습니까?');
     if (res) {
-      await deleteTodo({ _id });
-      alert('삭제되었습니다.');
+      await deleteTodo(_id!);
+      await dispatch(getTodoList());
       navigate('/');
     }
   };
@@ -68,7 +67,7 @@ export const useTodoInfo = () => {
   const handleCheckboxChange = async () => {
     if (todo._id !== undefined) {
       try {
-        await updateChecked(todo._id, todo.title, todo.content, !isChecked);
+        dispatch(updateChecked({ _id: todo._id, title: todo.title, content: todo.content, done: !isChecked }));
         setIsChecked(prevChecked => !prevChecked);
       } catch (error) {
         console.error('Error updating checked state:', error);

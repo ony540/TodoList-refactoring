@@ -1,21 +1,21 @@
 import { useState, useEffect } from 'react';
-import { getTodoList, getTotalNum } from '@/api/TodoAPI';
-import { TodoItem } from '@/types/TodoTypes';
+import { getTodoList, getTotalNum } from '@/store/asyncThunks/TodoAPIRedux';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppThunkDispatch, RootState } from '@/store/store';
 
 export const useTodoData = () => {
-  const [todoListData, setTodoListData] = useState<TodoItem[]>([]);
+  const dispatch: AppThunkDispatch = useDispatch();
   const [totalNum, setTotalNum] = useState(0);
+  const todoListData = useSelector((state: RootState) => state.todoReducer.todoListData);
 
   useEffect(() => {
     const fetchTodoData = async () => {
-      const data = await getTodoList();
+      await dispatch(getTodoList());
       const total = await getTotalNum();
-      setTodoListData(data);
       setTotalNum(total);
     };
-
     fetchTodoData();
-  }, []);
+  }, [dispatch]);
 
-  return { todoListData, setTodoListData, totalNum };
+  return { todoListData, totalNum };
 };

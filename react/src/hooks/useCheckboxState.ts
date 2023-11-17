@@ -1,13 +1,18 @@
 import { useEffect, useState, useRef } from 'react';
-import { updateChecked } from '@/api/TodoAPI';
+import { updateChecked } from '@/store/asyncThunks/TodoAPIRedux';
+import { AppThunkDispatch } from '@/store/store';
+import { useDispatch } from 'react-redux';
 
 export const useCheckboxState = initialTodo => {
-  const [isChecked, setIsChecked] = useState(initialTodo.done);
+  const { _id, title, content, done } = initialTodo;
+  const dispatch: AppThunkDispatch = useDispatch();
+
+  const [isChecked, setIsChecked] = useState(done);
   const throttleTimer = useRef<null | NodeJS.Timeout>(null);
 
   useEffect(() => {
-    setIsChecked(initialTodo.done);
-  }, [initialTodo.done]);
+    setIsChecked(done);
+  }, [done]);
 
   const handleCheckboxChange = () => {
     if (!throttleTimer.current) {
@@ -16,12 +21,10 @@ export const useCheckboxState = initialTodo => {
         throttleTimer.current = null;
       }, 500);
 
-      if (initialTodo._id !== undefined) {
+      if (_id !== undefined) {
         try {
           const updatedStatus = !isChecked;
-          updateChecked(initialTodo._id, initialTodo.title, initialTodo.content, updatedStatus).then(() =>
-            setIsChecked(updatedStatus),
-          );
+          dispatch(updateChecked({ _id, title, content, done: updatedStatus })).then(() => setIsChecked(updatedStatus));
         } catch (error) {
           console.error('Error updating checked state:', error);
         }
