@@ -15,7 +15,6 @@ const TodoItemComponent = ({ item }) => {
       </CheckboxContainer>
       <TitleContentContainer>
         <StyledLink to={`todo/${item._id}`}>{item.title}</StyledLink>
-        <ContentParagraph>{item.content}</ContentParagraph>
       </TitleContentContainer>
       <Button className="view-btn" onClick={() => navigate(`todo/${item._id}`)}>
         VIEW
@@ -92,27 +91,17 @@ const TitleContentContainer = styled.div`
 `;
 
 const StyledLink = styled(Link)`
-  display: block;
+  margin-bottom: 0;
   color: #000;
   font-size: 24px;
-  margin-bottom: 8px;
   font-weight: 500;
   text-decoration: none;
+  line-height: 1.5;
+  text-align: left;
 
   &:hover {
     text-decoration: underline;
   }
-`;
-
-const ContentParagraph = styled.p`
-  padding: 0;
-  margin: 0;
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
 `;
 
 const Button = styled.button`
@@ -121,7 +110,6 @@ const Button = styled.button`
   color: #fff;
   border-radius: 8px;
   cursor: pointer;
-  display: block;
   margin: 0 auto;
 
   &.view-btn {
