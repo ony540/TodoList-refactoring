@@ -1,19 +1,15 @@
 import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import TodoList from '@/pages/List/TodoList';
-import TodoRegist from '@/pages/Regist/TodoRegist';
-import TodoInfo from '@/pages/Info/TodoInfo';
+import Router from './pages/Router';
+import { Provider as MyProvider } from 'react-redux';
+import { store } from './store/store';
 
 function App() {
+  // const store = useStore();
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<TodoList />} />
-          <Route path="/regist" element={<TodoRegist />} />
-          <Route path="/todo/:_id" element={<TodoInfo />} />
-        </Routes>
-      </BrowserRouter>
+      <MyProvider store={store}>
+        <Router />
+      </MyProvider>
     </>
   );
 }
